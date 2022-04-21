@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "src":"cd Machine && node machine.js",
     "server":"node app.js",
-    "react":"cd ../MyAssistant && npm start",
+    "react":"cd ../Mac && npm start",
     "start_app": "concurrently \"npm run server\" \"npm run src\" \"npm run react\""
   },
   "keywords": [],

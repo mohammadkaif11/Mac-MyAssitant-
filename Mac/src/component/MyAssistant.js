@@ -35,6 +35,7 @@ function MyAssistant() {
     }
   }, [])
   
+ 
   const {transcript} =useSpeechRecognition({commands})
   return (
     <div>

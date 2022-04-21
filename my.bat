@@ -1,4 +1,4 @@
-cd "C:\WorkSpace\MyAssistant\MyAssistantBackend>"
+cd "C:\WorkSpace\Mac\MacBackend>"
 npm run start_app
 
 

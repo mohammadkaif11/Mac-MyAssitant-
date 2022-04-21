@@ -1,74 +1,77 @@
-// import React, { useState,useEffect } from 'react'
-// import '../App.css'
-// const io=require('socket.io-client')
-
-// let socket=io.connect('http://localhost:5000')
-
-// function Chat() {
-//   const [UserChat ,setUserChat]= useState([])
-//   const [CmChat ,setCmChat]= useState([])
-//   const [data,setdata]=useState('')
-
-//   //HandleonClick
-//   const HandleOnClick=()=>{
-//     console.log(data)
-//     socket.emit("Message",data)
-//     setUserChat([...UserChat,{id:UserChat.length,value:data}])
-//     setdata('')
-//   }
-
-//   useEffect(() => {
-//     socket.on('ResponseRecived',data=>{
-//       console.log(data)
-//       setCmChat([...CmChat,{id:CmChat.length ,value:data}])
-//     })
-//   }, [CmChat])
-  
-   
-//   //OnChange
-//   const  onchange=(e)=>{
-//      setdata(e.target.value)
-//   }
-//   return (
-//     <div> 
-//       <div className='container'>
-//         {
-//           UserChat.map(item=>{
-//             return <div> 
-//               <div className="_container" key={item.id}>
-//                  <p>{item.value}</p>
-//               </div>
-
-//            </div>
-//           })
-//         }
-//       {
-//          CmChat.map(item=>{
-//           return <div className="_container darker" key={item.id}>
-//           <p>{item.value}</p>
-//         </div>
-//         })
-//       }
-//       </div>
-//       <div className='fixed-bottom container'>
-//         <div className="mb-3 d-flex justify-content-center">
-//           <input type="text" value={data} onChange={onchange} className="form-control" id="exampleFormControlInput1 mx-2" />
-//           <input type='submit' onClick={HandleOnClick} className='btn btn-primary mx-2' />
-//         </div>
-//       </div>
-   
-//     </div>
-//   )
-// }
-
-// export default Chat
-
-import React from 'react'
+import React, { useState,useEffect } from 'react'
+const socketIOClient =require("socket.io-client");
 
 function Chat() {
+  const [data, setdata] = useState('');
+  const [items, setitems] = useState([]);
+
+  const HandleOnChange = (e) => {
+    setdata(e.target.value)
+  }
+
+  const HandleSubmit = (e) => {
+    console.log(data)
+    HandleClick(data)
+    e.preventDefault();
+    setdata('')
+  }
+
+  const HandleClick = (arg) => {
+    const socket = socketIOClient(window.location.protocol + "//" + window.location.hostname + ":5000");
+    socket.emit("SendMessage", arg)
+  }
+
+  useEffect(()=>{
+    const socket = socketIOClient(window.location.protocol+"//"+window.location.hostname+":5000");
+    socket.on('SendResponse',(Res)=>{
+      console.log(Res)
+      AddElement(Res);
+    })     
+    return()=>{
+        socket.off('SendResponse')
+    }
+   },[])
+  const AddElement=(data)=>{
+   setitems(PrevData=>[{
+       id:PrevData.length,
+       value:data
+       },...PrevData])
+}
   return (
-    <div>
-          
+    <div className='container'>
+      <div className='my-2'>
+        <form onSubmit={HandleSubmit} className='d-flex justify-content-center'>
+          <select value={data} onChange={HandleOnChange} className="form-select" aria-label="Default select example">
+            <option>Open this select menu</option>n
+            <option value="system restart">Restart Pc</option>
+            <option value="system shutdown">shutdown Pc</option>
+            <option value="volume up">VolumeUP</option>
+            <option value="volume down">VolumeDown</option>
+            <option value="volume mute">Mute</option>
+            <option value="start chrome">Open chrome</option>
+            <option value="start code">Open Vscode</option>
+            <option value="start notepad">Open notepad</option>
+            <option value="start explorer">Open File</option>
+
+          </select>
+          <input type='submit' className='btn btn-primary mx-2' />
+        </form>
+      </div>
+      <div>
+
+        {
+          items.map(item => {
+            return <div key={item.id} className="list-group my-2">
+              <li className="list-group-item list-group-item-action" >
+                <div className="d-flex w-100 justify-content-between">
+                  <h5 className="mb-1">{item.value}</h5>
+                  {/* <small>{item.time   }</small> */}
+                </div>
+              </li>
+            </div>
+          })
+        }
+      </div>
 
     </div>
   )

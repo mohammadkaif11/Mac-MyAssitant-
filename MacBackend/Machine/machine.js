@@ -49,7 +49,7 @@ socket.on('SendData', data => {
     }
 
     //StartFilecommand
-    else if(data.includes('start')){
+    else if(data.includes('start') && !data.includes('system')){
         exec(data, (error, stdout, stderr) => {
             if (error) {
                 console.log(error);
@@ -87,21 +87,24 @@ socket.on('SendData', data => {
         exec('shutdown /r', (error, stdout, stderr) => {
             if (error) {
                 console.log(error);
+                console.log("restart")
                 return;
             }
             if (stdout) {
                 socket.emit("GetResponse", `I have done My Job`)
+                console.log("restart")
+
                 return;
             }
             if (stderr) {
                 console.log(stderr)
+                console.log("restart")
                 return;
             }
         })
       }
       else{
         socket.emit("GetResponse", `I did Not Understand`)
-
       }
 
     }
@@ -112,6 +115,9 @@ socket.on('SendData', data => {
             var Msg=data.toString();
             socket.emit("GetResponse", Msg)
         } )
+    }
+    else {
+        socket.emit("GetResponse","Sorry But worng command")
     }
 
 })

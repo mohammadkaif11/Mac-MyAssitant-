@@ -20,6 +20,7 @@ function App() {
         <Route exact path="/taskManger" element={<TaskManger/>} />
         <Route exact path="/help" element={<Help/>} />
         <Route exact path="/about" element={<About/>} />
+
       </Routes>
   </div>
 
